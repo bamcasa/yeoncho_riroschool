@@ -10,12 +10,21 @@ def Classify_body(tr_body):
     result = []
     td_list = tr_body.select("td")
     result.append(td_list[0].text)  # 순번
+
     temp_txt = td_list[1].text
-    status = temp_txt[1:3]
-    name = temp_txt[4:-1]
+    status = temp_txt[1:3] #마감 or 제출
+    name = temp_txt[4:-1] #과제 제목
     result.append(status)
     result.append(name)
 
+    teacher = td_list[2].text
+    result.append(teacher) #선생님
+
+    date = td_list[3].text #마감일짜
+    result.append(date)
+
+    submission_number = td_list[4].text
+    result.append(submission_number)
     return result
 
 
@@ -46,9 +55,13 @@ html = driver.page_source
 soup = BeautifulSoup(html, 'html.parser')
 driver.close()
 body = soup.select("#container > div > table.all-table.mt-5 > tbody > tr")
+del body[0]
 
-# container > div > table.all-table.mt-5 > tbody > tr:nth-child(2) > td:nth-child(2) > a:nth-child(1)
+assignments = []
 
-# container > div > table.all-table.mt-5 > tbody > tr:nth-child(2) > td:nth-child(1)
-temp = Classify_body(body[1])
-print(temp)
+for title in body:
+    temp = Classify_body(title)
+    assignments.append(temp)
+    print(temp)
+
+# print(assignments)
