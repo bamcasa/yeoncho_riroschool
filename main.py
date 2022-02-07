@@ -1,10 +1,5 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-
-from bs4 import BeautifulSoup
-from selenium.webdriver.common.by import By
-
+from bs4 import BeautifulSoup as bs
+import requests
 
 def Classify_body(tr_body):
     result = []
@@ -42,30 +37,22 @@ with open("account.txt", "r") as f:
     id = lines[0] # 아이디
     pw = lines[1] # 패스워드
 
+LOGIN_INFO = {
+    'mid': id,
+    'mpass': pw
+}
+
 # one_grade =
 
+with requests.Session() as s:
+    login_req = s.post('https://yeoncho.riroschool.kr/user.php', data=LOGIN_INFO)
 
-# 웹드라이버
-# driver = webdriver.Chrome('webdriver/chromedriver.exe') #구버전
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-url = "https://yeoncho.riroschool.kr/user.php"
-driver.get(url)
-driver.implicitly_wait(3)
+    # print(login_req.status_code)
 
-# 로그인
-driver.find_element(By.NAME, 'mid').send_keys(id)
-driver.find_element(By.NAME, 'mpass').send_keys(pw)
-driver.find_element(By.XPATH, '//*[@id="container"]/div/form/div/div[5]/a').click()
+    post_one = s.get('https://yeoncho.riroschool.kr/portfolio.php?db=1553')
+    soup = bs(post_one.text, 'html.parser')
 
-driver.find_element(By.XPATH, '//*[@id="popnoti_noti"]/div/div/a[2]').click()
-
-driver.find_element(By.XPATH, '//*[@id="container"]/div/div[1]/ul/li[8]/em').click()
-driver.find_element(By.XPATH, '//*[@id="container"]/div/div[1]/ul/li[8]/ul/li[2]/span').click()
-
-html = driver.page_source
-soup = BeautifulSoup(html, 'html.parser')
-driver.close()
-body = soup.select("#container > div > div.renewal_wrap.portfolio_wrap > table > tbody > tr")
+body = soup.select("#container > div > div.renewal_wrap.portfolio_wrap > table > tr")
 print(len(body))
 del body[0]
 assignments = []
