@@ -9,22 +9,31 @@ from selenium.webdriver.common.by import By
 def Classify_body(tr_body):
     result = []
     td_list = tr_body.select("td")
-    result.append(td_list[0].text)  # 순번
-
-    temp_txt = td_list[1].text
-    status = temp_txt[1:3] #마감 or 제출
-    name = temp_txt[4:-1] #과제 제목
+    result.append(td_list[0].get_text())  # 순번
+    status = td_list[1].get_text() #마감 or 제출
+    status = status.strip()
     result.append(status)
+
+    name = td_list[2].get_text() #과제 제목
+    name = name.strip()
     result.append(name)
 
-    teacher = td_list[2].text
-    result.append(teacher) #선생님
+    my_status = td_list[3].get_text() #내가 냈는지 안 냈는지
+    my_status = my_status.strip()
+    result.append(my_status)
 
-    date = td_list[3].text #마감일짜
+    count = td_list[4].get_text() #제출 수
+    count = count.strip()
+    result.append(count)
+
+    teacher = td_list[5].get_text() #선생님
+    teacher = teacher.strip()
+    result.append(teacher)
+
+    date = td_list[6].text #마감일짜
+    date = date.strip()
     result.append(date)
 
-    submission_number = td_list[4].text
-    result.append(submission_number)
     return result
 
 
@@ -48,15 +57,17 @@ driver.find_element(By.NAME, 'mid').send_keys(id)
 driver.find_element(By.NAME, 'mpass').send_keys(pw)
 driver.find_element(By.XPATH, '//*[@id="container"]/div/form/div/div[5]/a').click()
 
-driver.find_element(By.XPATH, '//*[@id="container"]/div/div/ul/li[8]/em').click()
-driver.find_element(By.XPATH, '//*[@id="container"]/div/div/ul/li[8]/ul/li[2]/span').click()
+driver.find_element(By.XPATH, '//*[@id="popnoti_noti"]/div/div/a[2]').click()
+
+driver.find_element(By.XPATH, '//*[@id="container"]/div/div[1]/ul/li[8]/em').click()
+driver.find_element(By.XPATH, '//*[@id="container"]/div/div[1]/ul/li[8]/ul/li[2]/span').click()
 
 html = driver.page_source
 soup = BeautifulSoup(html, 'html.parser')
 driver.close()
-body = soup.select("#container > div > table.all-table.mt-5 > tbody > tr")
+body = soup.select("#container > div > div.renewal_wrap.portfolio_wrap > table > tbody > tr")
+print(len(body))
 del body[0]
-
 assignments = []
 
 for title in body:
