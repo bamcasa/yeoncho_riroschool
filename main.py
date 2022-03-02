@@ -7,6 +7,11 @@ with open("account.txt", "r") as f:
 
 rs = riroschool(id, pw)
 
-assignment_list = rs.recv_assignment(2)
+assignment_list = rs.recv_assignment(3,"과학",1)
+
 for i in assignment_list:
+    print(i)
+
+li = rs.recv_creative_experience("창체","자율",1)
+for i in li:
     print(i)
