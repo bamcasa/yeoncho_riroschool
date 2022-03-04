@@ -36,4 +36,4 @@ for i in board_list:
 
 ## Author
 음상훈  
-combeesang@rirosoft.com
+combeesang@gmail.com
