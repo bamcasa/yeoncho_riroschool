@@ -1,5 +1,5 @@
 # yeoncho_riroschool
-연초고 리로스쿨 페이지 불러오는 라이브러리
+연초고 리로스쿨 페이지 불러오는 라이브러리 
 
 ## Requirements
 Python 3.7  
