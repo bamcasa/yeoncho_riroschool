@@ -62,7 +62,60 @@ class riroschool:
             result.append(finish_date)
 
         if type == "board":
-            pass
+            td_list = tr_body.select("td")
+
+            # print(td_list[0].text)  # 번호
+            number = td_list[0].get_text()
+            result.append(number)
+
+            temp = td_list[1].get_text()
+            temp = temp.replace("\xa0","")
+            finish = temp.rfind("\n")
+            name = temp[1:finish]
+            result.append(name)
+
+            # print(td_list[3].text)  # 이름
+            teacher = td_list[3].get_text()
+            result.append(teacher)
+
+            # print(td_list[4].text)  # 날짜
+            date = td_list[4].get_text()
+            result.append(date)
+
+            # print(td_list[5].text)  # 조회
+            count = td_list[5].get_text()
+            result.append(count)
+
+        if type == "board_msg":
+            td_list = tr_body.select("td")
+
+            number = td_list[0].get_text()
+            result.append(number)
+
+            temp1 = td_list[1].select("a")
+            temp1 = temp1[0].text
+            status = temp1[0:2]
+            result.append(status)
+
+
+            finish = temp1.rfind("]")
+            start = temp1.rfind("[")
+
+
+            name = temp1[3:finish - (finish - start)]  # 제목
+            result.append(name)
+
+            count = temp1[start + 1:finish]
+            result.append(count)
+
+            teacher = td_list[3].text  # 선생님 이름
+            result.append(teacher)
+
+            views = td_list[4].text  # 조회수
+            result.append(views)
+
+            date = td_list[5].text  # 날짜
+            result.append(date)
 
         return result
 
@@ -118,14 +171,14 @@ class riroschool:
         url += f"&page={page}"  # 페이지 추가
 
         post_one = self.session.get(url)
-        # print(post_one)
+        # print(post_one.text)
         soup = bs(post_one.text, 'html.parser')
         body = soup.select("#container > div > div.renewal_wrap.portfolio_wrap > table > tr")
         del body[0]
         assignments = []
 
         for title in body:
-            temp = self.Classify_body(title)
+            temp = self.Classify_body(title, "portfolio")
             assignments.append(temp)
 
         return assignments
@@ -199,7 +252,7 @@ class riroschool:
         assignments = []
 
         for title in body:
-            temp = self.Classify_body(title)
+            temp = self.Classify_body(title, "portfolio")
             assignments.append(temp)
 
         return assignments
@@ -207,33 +260,42 @@ class riroschool:
     def recv_board(self, subject="", page=1):
         if subject == "안내":  # 안내
             url = "https://yeoncho.riroschool.kr/board.php?db=1001"
+            type = "board"
         elif subject == "취합":  # 취합
             url = "https://yeoncho.riroschool.kr/board_msg.php?db=1901"
+            type = "board_msg"
         elif subject.strip() == "1학년공지":  # 1학년 공지
             url = "https://yeoncho.riroschool.kr/board.php?db=2"
+            type = "board"
         elif subject.strip() == "2학년공지":  # 2학년 공지
             url = "https://yeoncho.riroschool.kr/board.php?db=1"
+            type = "board"
         elif subject.strip() == "3학년공지":  # 3학년 공지
             url = "https://yeoncho.riroschool.kr/board.php?db=1002"
+            type = "board"
         elif subject == "진로진학":  # 진로진학
             url = "https://yeoncho.riroschool.kr/board_msg.php?db=1905"
+            type = "board_msg"
         elif subject == "요청게시판":  # 요청게시판
             url = "https://yeoncho.riroschool.kr/board_msg.php?db=1903"
+            type = "board_msg"
         elif subject == "수업자료":  # 수업자료
             url = "https://yeoncho.riroschool.kr/board.php?db=3"
+            type = "board"
         else:
             raise NameError('알맞는 과목이 아님')
 
         url += f"&page={page}"  # 페이지 추가
-
+        # print(url)
         post_one = self.session.get(url)
-        # print(post_one)
+        # print(post_one.text)
         soup = bs(post_one.text, 'html.parser')
-        body = soup.select("#container > div > div.renewal_wrap.portfolio_wrap > table > tr")
+        body = soup.select("#container > div.container_inner > table > form > tr > td > table.all-table > tr")
+        # print(body)
         del body[0]
         boards = []
         for title in body:
-            temp = self.Classify_body(title)
+            temp = self.Classify_body(title, type)
             boards.append(temp)
 
         return boards
