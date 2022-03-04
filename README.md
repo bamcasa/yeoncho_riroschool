@@ -32,7 +32,7 @@ for i in board_list:
     print(i)
 ```
 ## Documentation
-
+[설명서](https://github.com/bamcasa/yeoncho_riroschool/blob/main/Document.md)를 봐주십시오.
 
 ## Author
 음상훈  
