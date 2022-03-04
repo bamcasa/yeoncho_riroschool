@@ -342,17 +342,22 @@ class riroschool:
             raise NameError('알맞는 과목이 아님')
 ```
 - ```subject```에 따라 웹사이트 주소 변경
+- ```subject```에 따라 ```type```
 - ```subject```이 올바르지 않으면 에러
 ```python
 
         url += f"&page={page}"  # 페이지 추가
-        # print(url)
+```
+- page추가
+```python
         post_one = self.session.get(url)
-        # print(post_one.text)
         soup = bs(post_one.text, 'html.parser')
         body = soup.select("#container > div.container_inner > table > form > tr > td > table.all-table > tr")
-        # print(body)
         del body[0]
+```
+- 웹사이트 주소로 get를 한후 bs4로 필요한 부분만 추출한다
+- ```body[0]```은 필요없는 부분이어서 삭제한다.
+```python
         boards = []
         for title in body:
             temp = self.Classify_body(title, type)
@@ -360,3 +365,7 @@ class riroschool:
 
         return boards
 ```
+- 받은 과제들의 html들을 Classify_body함수에 넣는다.
+- 즉 형식대로 분류를 하는 것이다.
+- 원격수업과제방은 ```subject```에 형식이 바뀔 수 있으므로 Classify_body함수의 인자로 ```type```를 넣는다.
+- 그후 반환한다. 
