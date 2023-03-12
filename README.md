@@ -35,7 +35,7 @@ for i in board_list:
 [설명서](https://github.com/bamcasa/yeoncho_riroschool/blob/main/Document.md)를 봐주십시오.
 
 ## Mechanism
-[작동원리](https://github.com/bamcasa/yeoncho_riroschool/blob/main/Document.md)를 봐주십시오.
+[작동원리](https://github.com/bamcasa/yeoncho_riroschool/blob/main/Mechanism.md)를 봐주십시오.
 
 ## Author
 음상훈  
